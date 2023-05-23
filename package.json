@@ -3,15 +3,22 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "import": "./lib/index.mjs",
-    "require": "./lib/index.cjs"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.cjs"
+    },
+    "./errors.js": {
+      "types": "./lib/errors/index.d.ts",
+      "import": "./lib/errors/index.mjs",
+      "require": "./lib/errors/index.cjs"
+    }
   },
   "module": "./lib/index.mjs",
   "main": "./lib/index.cjs",
-  "types": "types/index.d.ts",
+  "types": "types/lib/index.d.ts",
   "files": [
-    "lib",
-    "types"
+    "lib"
   ],
   "author": "Donald Geddes",
   "licence": "MIT",
@@ -22,16 +29,18 @@
   "ava": {
     "require": [
       "dotenv/config"
-    ]
+    ],
+    "concurrency": 1
   },
   "prettier": "@hbauer/prettier-config",
   "eslintConfig": {
     "extends": "@hbauer/eslint-config"
   },
   "scripts": {
-    "build": "shx rm -rf ./lib && rollup -c",
-    "types": "shx rm -rf ./types && tsc -p jsconfig.json",
-    "prepublishOnly": "npm run types && npm run build",
+    "build": "rollup -c",
+    "types": "tsc -p jsconfig.json",
+    "clean": "shx rm -rf ./lib",
+    "prepublishOnly": "npm run clean && npm run types && npm run build",
     "test": "ava",
     "prepare": "husky install"
   },
@@ -47,5 +56,12 @@
     "rollup": "^3.22.0",
     "shx": "^0.3.4",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@hbauer/convenience-functions": "^0.33.1",
+    "@hbauer/local-file": "^0.4.7",
+    "immer": "^10.0.2",
+    "remeda": "^1.14.0",
+    "zod": "^3.21.4"
   }
 }

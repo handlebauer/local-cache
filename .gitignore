@@ -1,3 +1,5 @@
+__cache
+
 node_modules
 lib
 types
