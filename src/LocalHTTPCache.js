@@ -94,21 +94,27 @@ export class LocalHTTPCache {
 }
 
 /**
+ * @typedef {import('./parameters/common.js').LocalHTTPCacheHref} LocalHTTPCacheHref
+ */
+
+/**
  * @public
- * @param {string} href
+ * @param {LocalHTTPCache} href
  */
 LocalHTTPCache.prototype.getPaths = methods.getPaths
 
 /**
+ * @public
  * @this {LocalHTTPCache}
  * @param {string} href
  */
 LocalHTTPCache.prototype.get = methods.get
 
 /**
+ * @public
  * @this {LocalHTTPCache}
- * @param {string} href
- * @param {string | Record<string, any>} data
+ * @param {LocalHTTPCacheHref} href
+ * @param {any} data
  */
 LocalHTTPCache.prototype.set = methods.set
 
