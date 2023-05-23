@@ -37,7 +37,15 @@ test.afterEach('test', async _ => {
   await sleep(10)
 })
 
-test('Should return a valid LocalFile instance', async t => {
+test("Should return null for for a file that doesn't exist", async t => {
+  const cache = await LocalHTTPCache.create(baseURL, html.contentType)
+
+  const file = await cache.get(href)
+
+  t.is(file, null)
+})
+
+test('Should return a valid LocalFile instance for a file that exists', async t => {
   const cache = await LocalHTTPCache.create(baseURL, html.contentType)
 
   await cache.set(href, html.data)

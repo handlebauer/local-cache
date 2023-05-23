@@ -1,4 +1,5 @@
 import { LocalFile } from '@hbauer/local-file'
+import { throwUnlessENOENT } from '@hbauer/local-file/errors.js'
 import { LocalHTTPCache } from '../LocalHTTPCache.js'
 
 /**
@@ -15,12 +16,17 @@ import { LocalHTTPCache } from '../LocalHTTPCache.js'
 export async function get(href, { expiredAfter } = { expiredAfter: null }) {
   const { fullPath } = this.getPaths(href)
 
-  const [file] = await Promise.all([
-    LocalFile.read(fullPath, this.decode),
-    this.setMeta('read', null),
-  ])
+  /**
+   * Read the file from the local file-system. If the file is found,
+   * mark it down as a read; if the file isn't found, return null; if
+   * there is a problem unrelated to whether the file exists or not,
+   * throw an error.
+   */
+  const file = await LocalFile.read(fullPath, this.decode)
+    .then(async file => (await this.setMeta('read', null), file))
+    .catch(throwUnlessENOENT)
 
-  if (expiredAfter !== null) {
+  if (file && expiredAfter !== null) {
     const isExpired = await file.olderThan(expiredAfter)
     if (isExpired) file.expire()
   }
