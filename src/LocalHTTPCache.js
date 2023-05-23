@@ -31,7 +31,7 @@ export class LocalHTTPCache {
    * @param {LocalHTTPCacheContentType} contentType
    * @param {LocalHTTPCacheOptions} [options]
    */
-  constructor(baseURL, contentType, options = { rootDirectory: '__cache' }) {
+  constructor(baseURL, contentType, options) {
     /**
      * @public
      * @readonly
@@ -49,27 +49,31 @@ export class LocalHTTPCache {
     this.contentType = validate.contentType.parse(contentType)
 
     /**
+     *  parse options
+     */
+    options = validate.options.parse(options)
+
+    /**
      * @public
      * @readonly
-     * @type {string}
+     * @type {LocalHTTPCacheOptions['rootDirectory']}
      * e.g. '__cache'
      */
-    this.rootDirectory = validate.rootDirectory.parse(options.rootDirectory)
+    this.rootDirectory = options.rootDirectory
 
     /**
      * @public
      * @readonly
-     * @type {string}
+     * @type {LocalHTTPCacheOptions['name']}
      */
-    this.name = validate.name.parse(options.name) || getHost(this.baseURL)
+    this.name = options.name || getHost(this.baseURL)
 
     /**
      * @public
      * @readonly
-     * @type {string}
+     * @type {LocalHTTPCacheOptions['fileExtension']}
      */
-    this.fileExtension =
-      validate.fileExtension.parse(options.fileExtension) || null
+    this.fileExtension = options.fileExtension || null
 
     /**
      * @function

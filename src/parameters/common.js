@@ -5,23 +5,24 @@ import { removeSlashes } from '@hbauer/convenience-functions'
  * @typedef {z.infer<typeof baseURL>} LocalHTTPCacheBaseURL
  * @typedef {z.infer<typeof contentType>} LocalHTTPCacheContentType
  * @typedef {z.infer<typeof href>} LocalHTTPCacheHref
- * @typedef {z.infer<typeof cacheOptions>} LocalHTTPCacheOptions
+ * @typedef {z.infer<typeof options>} LocalHTTPCacheOptions
  */
 
-export const baseURL = z.string().transform(dir => removeSlashes(dir))
+export const baseURL = z.string().url().transform(removeSlashes)
 
 export const contentType = z.enum(['json', 'html'])
 
 export const rootDirectory = z
   .string()
   .optional()
-  .transform(dir => removeSlashes(dir))
+  .transform(removeSlashes)
+  .default('__cache')
 
 export const name = z
   .string()
   .optional()
   .transform(string =>
-    string ? string.split(' ').join('-').toLowerCase() : null
+    string ? string.split(' ').join('-').toLowerCase() : undefined
   )
 
 export const fileExtension = z
@@ -30,13 +31,12 @@ export const fileExtension = z
   .toLowerCase()
   .optional()
 
-export const cacheOptions = z.object({
-  rootDirectory,
-  name,
-  fileExtension,
-})
+export const options = z
+  .object({
+    rootDirectory,
+    name,
+    fileExtension,
+  })
+  .default({})
 
-export const href = z
-  .string()
-  .nonempty()
-  .transform(dir => removeSlashes(dir))
+export const href = z.string().nonempty().transform(removeSlashes)
