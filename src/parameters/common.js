@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { removeSlashes } from '@hbauer/convenience-functions'
+import { fileAgeDuration } from '@hbauer/local-file/parameters.js'
 
 /**
  * @typedef {z.infer<typeof baseURL>} LocalHTTPCacheBaseURL
@@ -40,3 +41,7 @@ export const options = z
   .default({})
 
 export const href = z.string().nonempty().transform(removeSlashes)
+
+export const getOptions = z
+  .object({ expiredAfter: fileAgeDuration.nullable().optional().default(null) })
+  .default({ expiredAfter: null })

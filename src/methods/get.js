@@ -1,6 +1,7 @@
 import { LocalFile } from '@hbauer/local-file'
 import { throwUnlessENOENT } from '@hbauer/local-file/errors.js'
 import { LocalHTTPCache } from '../LocalHTTPCache.js'
+import * as validate from '../parameters/common.js'
 
 /**
  * @typedef {import('../parameters/common.js').LocalHTTPCacheHref} LocalHTTPCacheHref
@@ -11,9 +12,11 @@ import { LocalHTTPCache } from '../LocalHTTPCache.js'
  *
  * @this {LocalHTTPCache}
  * @param {LocalHTTPCacheHref} href
- * @param {{ expiredAfter: LocalHTTPCacheExpiresAfter }} [options]
+ * @param {{ expiredAfter?: LocalHTTPCacheExpiresAfter }} [options]
  */
-export async function get(href, { expiredAfter } = { expiredAfter: null }) {
+export async function get(href, options) {
+  options = validate.getOptions.parse(options)
+
   const { fullPath } = this.getPaths(href)
 
   /**
@@ -26,8 +29,8 @@ export async function get(href, { expiredAfter } = { expiredAfter: null }) {
     .then(async file => (await this.setMeta('read', null), file))
     .catch(throwUnlessENOENT)
 
-  if (file && expiredAfter !== null) {
-    const isExpired = await file.olderThan(expiredAfter)
+  if (file && options.expiredAfter !== null) {
+    const isExpired = await file.olderThan(options.expiredAfter)
     if (isExpired) file.expire()
   }
 

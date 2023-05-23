@@ -94,7 +94,7 @@ test('Should return a LocalFile instance with `isExpired` set to true if the fil
   t.is(file.isExpired, true)
 })
 
-test.only('Should throw an error if the value passed in for `expiredAfter` is invalid', async t => {
+test('Should throw an error if the value passed in for `expiredAfter` is invalid', async t => {
   const cache = await LocalHTTPCache.create(baseURL, html.contentType)
 
   await cache.set(href, html.data)
@@ -103,4 +103,14 @@ test.only('Should throw an error if the value passed in for `expiredAfter` is in
     // @ts-ignore
     cache.get(href, { expiredAfter: [0, 'millisecds'] })
   )
+})
+
+test('Should execute without problems if the method options passed in are nullish or omitted', async t => {
+  const cache = await LocalHTTPCache.create(baseURL, html.contentType)
+
+  await cache.set(href, html.data)
+
+  await t.notThrowsAsync(() => cache.get(href, { expiredAfter: undefined }))
+  await t.notThrowsAsync(() => cache.get(href, { expiredAfter: null }))
+  await t.notThrowsAsync(() => cache.get(href))
 })
