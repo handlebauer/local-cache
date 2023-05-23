@@ -3,7 +3,11 @@ import pkg from './package.json' assert { type: 'json' }
 const main = './src/index.js'
 const errors = './src/errors/index.js'
 
-const external = Object.keys(pkg.dependencies)
+const external = [
+  'fs/promises',
+  '@hbauer/local-file/errors.js',
+  ...Object.keys(pkg.dependencies),
+]
 
 // eslint-disable-next-line import/no-default-export
 export default [
