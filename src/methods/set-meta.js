@@ -11,8 +11,8 @@ import { LocalHTTPCacheError } from '../errors/LocalHTTPCacheError.js'
 /**
  * @param {'read' | 'write'} type
  * @param {LocalHTTPCacheMetadata} data
- * @param {LocalFile} current
- * @param {LocalFile} [previous]
+ * @param {LocalFile<any>} current
+ * @param {LocalFile<any>} [previous]
  */
 const produceChanges = (type, data, current, previous = null) => {
   const now = Date.now()
@@ -57,8 +57,8 @@ const produceChanges = (type, data, current, previous = null) => {
  * @template {LocalHTTPCacheOperationType} T
  * @this {LocalHTTPCache}
  * @param {T} type
- * @param {T extends `write` ? LocalFile : null} current
- * @param {T extends `write` ? LocalFile : null} [previous]
+ * @param {T extends `write` ? LocalFile<any> : null} current
+ * @param {T extends `write` ? LocalFile<any> : null} [previous]
  */
 export async function setMeta(type, current, previous) {
   const { fullPath } = this.getPaths(LocalHTTPCache.metafile)

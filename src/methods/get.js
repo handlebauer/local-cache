@@ -5,7 +5,7 @@ import * as validate from '../parameters/common.js'
 
 /**
  * @typedef {import('../parameters/common.js').LocalHTTPCacheHref} LocalHTTPCacheHref
- * @typedef {Parameters<LocalFile['olderThan']>['0']} LocalHTTPCacheExpiresAfter
+ * @typedef {Parameters<LocalFile<any>['olderThan']>['0']} LocalHTTPCacheExpiresAfter
  */
 
 /**
