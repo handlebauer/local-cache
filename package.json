@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@hbauer/convenience-functions": "^0.33.1",
-    "@hbauer/local-file": "^0.4.10",
+    "@hbauer/local-file": "^0.4.11",
     "immer": "^10.0.2",
     "remeda": "^1.14.0",
     "zod": "^3.21.4"
