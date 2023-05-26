@@ -18,9 +18,11 @@ export async function overwrite(fullPath, data) {
 }
 
 /**
+ * @template {any} D
+ *
  * @this {LocalHTTPCache}
  * @param {LocalHTTPCacheHref} href
- * @param {any} data
+ * @param {D} data
  */
 export async function set(href, data) {
   const { fullPath } = this.getPaths(href)
