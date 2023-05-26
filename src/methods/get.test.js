@@ -54,6 +54,7 @@ test('Should return a valid LocalFile instance for a file that exists', async t 
 
   t.true(file instanceof LocalFile)
   t.true(file.attributes.cached)
+  t.false(file.attributes.expired)
   t.is(file.path, cache.getPaths(href).fullPath)
 })
 
