@@ -41,7 +41,8 @@ export async function set(href, data) {
 
   await this.setMeta('write', current, previous)
 
-  current.attributes.cached = !!previous
+  current.attributes.expired = false
+  current.attributes.fromCache = false
 
   return current
 }

@@ -30,7 +30,7 @@ export async function get(href, options) {
     .catch(throwUnlessENOENT)
 
   if (file !== null) {
-    file.attributes.cached = true
+    file.attributes.fromCache = true
     file.attributes.expired = false
 
     if (options.expiredAfter !== null) {

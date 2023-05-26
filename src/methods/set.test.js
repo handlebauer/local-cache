@@ -47,7 +47,7 @@ test('Should return a valid LocalFile instance upon invoking `set`', async t => 
   const file = await cache.set(href, json.data)
 
   t.true(file instanceof LocalFile)
-  t.false(file.attributes.cached)
+  t.false(file.attributes.fromCache)
 })
 
 test('Should write JSON data to filesystem upon invoking `set`', async t => {

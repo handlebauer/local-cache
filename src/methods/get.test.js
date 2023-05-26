@@ -53,7 +53,7 @@ test('Should return a valid LocalFile instance for a file that exists', async t 
   const file = await cache.get(href)
 
   t.true(file instanceof LocalFile)
-  t.true(file.attributes.cached)
+  t.true(file.attributes.fromCache)
   t.false(file.attributes.expired)
   t.is(file.path, cache.getPaths(href).fullPath)
 })
