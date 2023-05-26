@@ -53,6 +53,7 @@ test('Should return a valid LocalFile instance for a file that exists', async t 
   const file = await cache.get(href)
 
   t.true(file instanceof LocalFile)
+  t.true(file.attributes.cached)
   t.is(file.path, cache.getPaths(href).fullPath)
 })
 
@@ -81,7 +82,7 @@ test('Should return a valid LocalFile instance whether provided a relative or ab
   t.is(relative.path, absolute.path)
 })
 
-test('Should return a LocalFile instance with `isExpired` set to true if the file is older than the provided value', async t => {
+test('Should return a LocalFile instance with the `expired` attribute set to true if the file is older than the provided value', async t => {
   const cache = await LocalHTTPCache.create(baseURL, html.contentType)
 
   await cache.set(href, html.data)
@@ -91,7 +92,7 @@ test('Should return a LocalFile instance with `isExpired` set to true if the fil
   t.true(file instanceof LocalFile)
   t.is(file.path, path)
   t.is(file.path, cache.getPaths(href).fullPath)
-  t.is(file.isExpired, true)
+  t.is(file.attributes.expired, true)
 })
 
 test('Should throw an error if the value passed in for `expiredAfter` is invalid', async t => {

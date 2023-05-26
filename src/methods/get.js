@@ -29,9 +29,13 @@ export async function get(href, options) {
     .then(async file => (await this.setMeta('read', null), file))
     .catch(throwUnlessENOENT)
 
-  if (file && options.expiredAfter !== null) {
-    const isExpired = await file.olderThan(options.expiredAfter)
-    if (isExpired) file.expire()
+  if (file !== null) {
+    file.attributes.cached = true
+
+    if (options.expiredAfter !== null) {
+      const isExpired = await file.olderThan(options.expiredAfter)
+      if (isExpired) file.attributes.expired = true
+    }
   }
 
   return file

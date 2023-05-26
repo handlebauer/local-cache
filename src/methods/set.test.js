@@ -29,6 +29,12 @@ const html = /** @type {const} */ ({
  *
  */
 
+test.before('all', async _ => {
+  await rm(rootDirectory, { recursive: true }).catch(throwUnlessENOENT)
+
+  await sleep(10)
+})
+
 test.afterEach('test', async _ => {
   await rm(rootDirectory, { recursive: true }).catch(throwUnlessENOENT)
 
@@ -41,6 +47,7 @@ test('Should return a valid LocalFile instance upon invoking `set`', async t => 
   const file = await cache.set(href, json.data)
 
   t.true(file instanceof LocalFile)
+  t.false(file.attributes.cached)
 })
 
 test('Should write JSON data to filesystem upon invoking `set`', async t => {
