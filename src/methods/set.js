@@ -23,8 +23,9 @@ export async function overwrite(fullPath, data) {
  * @this {LocalHTTPCache}
  * @param {LocalHTTPCacheHref} href
  * @param {D} data
+ * @param {(data: D) => string} [encode]
  */
-export async function set(href, data) {
+export async function set(href, data, encode) {
   const { fullPath } = this.getPaths(href)
 
   /**
@@ -37,7 +38,8 @@ export async function set(href, data) {
 
   // prettier-ignore
   const previous = await LocalFile.read(fullPath, this.decode).catch(throwUnlessENOENT)
-  const current = await LocalFile.save(fullPath, data, this.encode)
+  // prettier-ignore
+  const current = await LocalFile.save(fullPath, data, encode || this.encode)
 
   await this.setMeta('write', current, previous)
 
