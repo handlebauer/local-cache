@@ -43,5 +43,8 @@ export const options = z
 export const href = z.string().nonempty().transform(removeSlashes)
 
 export const getOptions = z
-  .object({ expiredAfter: fileAgeDuration.nullable().optional().default(null) })
-  .default({ expiredAfter: null })
+  .object({
+    expiredAfter: fileAgeDuration.nullable().optional().default(null),
+    decode: z.function().args(z.string()).nullable().optional().default(null),
+  })
+  .default({ expiredAfter: null, decode: null })

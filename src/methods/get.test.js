@@ -19,10 +19,16 @@ const name = new URL(baseURL).host
 const href = baseURL + '/' + 'resource'
 const path = rootDirectory + '/' + name + '/' + 'resource'
 
+const json = /** @type {const} */ ({
+  data: { foo: 'bar' },
+  contentType: 'json',
+  fileExtension: 'json',
+})
+
 const html = /** @type {const} */ ({
   data: '<html><head><title>test</title></head><body>test body</body></html>',
   contentType: 'html',
-  fileExtension: 'json',
+  fileExtension: 'html',
 })
 
 /**
@@ -115,4 +121,16 @@ test('Should execute without problems if the method options passed in are nullis
   await t.notThrowsAsync(() => cache.get(href, { expiredAfter: undefined }))
   await t.notThrowsAsync(() => cache.get(href, { expiredAfter: null }))
   await t.notThrowsAsync(() => cache.get(href))
+})
+
+test('Should decode data using optional decode param if specified', async t => {
+  const cache = await LocalHTTPCache.create(baseURL, html.contentType) // html contentType, defaults to the html => html decode fn
+
+  await cache.set(href, json.data, JSON.stringify) // save some json data
+
+  let file = await cache.get(href)
+  t.is(typeof file.data, 'string')
+
+  file = await cache.get(href, { decode: JSON.parse })
+  t.is(typeof file.data, 'object')
 })

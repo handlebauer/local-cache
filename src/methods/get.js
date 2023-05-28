@@ -12,7 +12,7 @@ import * as validate from '../parameters/common.js'
  *
  * @this {LocalHTTPCache}
  * @param {LocalHTTPCacheHref} href
- * @param {{ expiredAfter?: LocalHTTPCacheExpiresAfter }} [options]
+ * @param {{ expiredAfter?: LocalHTTPCacheExpiresAfter, decode?: (data: string) => any }} [options]
  */
 export async function get(href, options) {
   options = validate.getOptions.parse(options)
@@ -25,7 +25,7 @@ export async function get(href, options) {
    * there is a problem unrelated to whether the file exists or not,
    * throw an error.
    */
-  const file = await LocalFile.read(fullPath, this.decode)
+  const file = await LocalFile.read(fullPath, options.decode || this.decode)
     .then(async file => (await this.setMeta('read', null), file))
     .catch(throwUnlessENOENT)
 

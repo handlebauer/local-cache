@@ -21,7 +21,7 @@ const path = rootDirectory + '/' + name + '/' + LocalHTTPCache.metafile
 const html = /** @type {const} */ ({
   data: '<html><head><title>test</title></head><body>test body</body></html>',
   contentType: 'html',
-  fileExtension: 'json',
+  fileExtension: 'html',
 })
 
 /**

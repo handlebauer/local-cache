@@ -20,7 +20,7 @@ const json = /** @type {const} */ ({
 const html = /** @type {const} */ ({
   data: '<html><head><title>test</title></head><body>test body</body></html>',
   contentType: 'html',
-  fileExtension: 'json',
+  fileExtension: 'html',
 })
 
 /**
@@ -69,7 +69,7 @@ test('Should write HTML data to filesystem', async t => {
   t.is(html.data, data)
 })
 
-test.only('Should encode data using optional encode param if specified', async t => {
+test('Should encode data using optional encode param if specified', async t => {
   const cache = await LocalHTTPCache.create(baseURL, html.contentType) // html contentType, defaults to the html => html encode fn
 
   // @ts-ignore
