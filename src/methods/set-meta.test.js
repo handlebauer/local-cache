@@ -30,7 +30,7 @@ const html = /** @type {const} */ ({
  *
  */
 
-test.before('test', async _ => {
+test.beforeEach('test', async _ => {
   await rm(rootDirectory, { recursive: true }).catch(throwUnlessENOENT)
 
   await sleep(10)
@@ -87,4 +87,39 @@ test('Should correctly update the cache size if a file is updated/modified', asy
 
   t.is(meta.ops.writes, 2)
   t.is(meta.files.size, 100)
+})
+
+test("Should update metadata's delete ops if `delete` is provided as the type", async t => {
+  const cache = await LocalHTTPCache.create(baseURL, html.contentType)
+
+  const file = await cache.set(randomString(10), randomString(50))
+
+  await cache.setMeta('delete', null, file)
+  const meta = await cache.getMeta()
+
+  const actual = await readFile(path, 'utf-8').then(JSON.parse)
+
+  t.deepEqual(meta, actual)
+  t.is(meta.ops.deletes, 1)
+})
+
+test('Should correctly update the cache size if a file is removed', async t => {
+  const cache = await LocalHTTPCache.create(baseURL, html.contentType)
+
+  const href = 'test'
+  let size = 50
+
+  await cache.set(href, randomString(size))
+  let meta = await cache.getMeta()
+
+  t.is(meta.files.size, size)
+  t.is(meta.ops.writes, 1)
+  t.is(meta.ops.deletes, 0)
+
+  await cache.del(href)
+  meta = await cache.getMeta()
+
+  t.is(meta.files.size, 0)
+  t.is(meta.ops.writes, 1)
+  t.is(meta.ops.deletes, 1)
 })

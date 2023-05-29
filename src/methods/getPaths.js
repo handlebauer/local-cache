@@ -8,6 +8,7 @@ import * as validate from '../parameters/common.js'
  */
 
 /**
+ * @public
  * @this {LocalHTTPCache}
  * @param {LocalHTTPCacheHref} href
  */

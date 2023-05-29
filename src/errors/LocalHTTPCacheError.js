@@ -1,34 +1,56 @@
+import { ZodError } from 'zod'
+import { formatZodError } from './format/format-zod-error.js'
+
 /**
- * @param {Error & NodeJS.ErrnoException} nativeError
+ * @typedef {(Error & NodeJS.ErrnoException | ZodError) & { status?: number, code?: string }} ParentError
  */
-const isErrnoException = nativeError => typeof nativeError?.code === 'string'
 
 export class LocalHTTPCacheError extends Error {
   /**
-   * @param {{ title?: string, description?: string, parent?: Error & NodeJS.ErrnoException }} params
+   * @typedef {{
+   * message?: string
+   * parent?: ParentError
+   * formatParent?: (error: Error & NodeJS.ErrnoException) => string
+   * status?: number
+   * code?: string
+   * }} LocalHTTPCacheErrorParams
    */
-  constructor({ title, description, parent }) {
+
+  /**
+   * @param {string} title
+   * @param {LocalHTTPCacheErrorParams} params
+   */
+  constructor(title, { message, parent, formatParent, status, code } = {}) {
     super()
 
     if (title) {
-      this.message = title + ' error'
+      this.message = title
     }
 
-    if (title && description) {
-      this.message += ': ' + description
-    }
-
-    if (description && !title) {
-      this.message += description
+    if (message) {
+      if (title) {
+        this.message += ':' + ' ' + message
+      } else {
+        this.message = message
+      }
     }
 
     if (parent) {
-      this.message += '\n' + '[' + parent.message + ']'
+      if (parent instanceof ZodError) {
+        this.message += formatZodError(parent)
+      } else if (formatParent) {
+        this.message += ' ' + '[' + formatParent(parent) + ']'
+      } else {
+        this.message += ' ' + '[' + parent.message + ']'
+      }
     }
 
-    if (isErrnoException(parent) === true) {
-      this.code = parent.code
-      this.isErrnoException = true
+    if (status || parent?.status) {
+      this.status = status || parent.status
+    }
+
+    if (code || parent?.code) {
+      this.code = code || parent?.code
     }
   }
 }

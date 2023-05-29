@@ -9,7 +9,7 @@ import * as validate from '../parameters/common.js'
  */
 
 /**
- *
+ * @public
  * @this {LocalHTTPCache}
  * @param {LocalHTTPCacheHref} href
  * @param {{ expiredAfter?: LocalHTTPCacheExpiresAfter, decode?: (data: string) => any }} [options]

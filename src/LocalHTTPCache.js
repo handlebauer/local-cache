@@ -125,6 +125,14 @@ LocalHTTPCache.prototype.set = methods.set
 /**
  * @public
  * @this {LocalHTTPCache}
+ * @param {LocalHTTPCacheHref} href
+ * @returns {Promise<void>}
+ */
+LocalHTTPCache.prototype.del = methods.del
+
+/**
+ * @public
+ * @this {LocalHTTPCache}
  */
 LocalHTTPCache.prototype.createMeta = methods.createMeta
 

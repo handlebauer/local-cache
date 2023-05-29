@@ -9,7 +9,7 @@ import { LocalHTTPCacheError } from '../errors/LocalHTTPCacheError.js'
  */
 
 /**
- * @param {'read' | 'write'} type
+ * @param {LocalHTTPCacheOperationType} type
  * @param {LocalHTTPCacheMetadata} data
  * @param {LocalFile<any>} current
  * @param {LocalFile<any>} [previous]
@@ -25,6 +25,15 @@ const produceChanges = (type, data, current, previous = null) => {
     return produce(data, draft => {
       draft.updatedAt = now
       draft.ops.reads += 1
+    })
+  }
+
+  if (type === 'delete') {
+    return produce(data, draft => {
+      draft.updatedAt = now
+      draft.ops.deletes += 1
+      draft.files.count -= 1
+      draft.files.size -= previous.size
     })
   }
 
@@ -54,11 +63,13 @@ const produceChanges = (type, data, current, previous = null) => {
 
 /**
  * @private
+ *
  * @template {LocalHTTPCacheOperationType} T
+ *
  * @this {LocalHTTPCache}
  * @param {T} type
- * @param {T extends `write` ? LocalFile<any> : null} current
- * @param {T extends `write` ? LocalFile<any> : null} [previous]
+ * @param {T extends 'write' ? LocalFile<any> : null} current
+ * @param {T extends 'write' | 'delete' ? LocalFile<any> : null} [previous]
  */
 export async function setMeta(type, current, previous) {
   const { fullPath } = this.getPaths(LocalHTTPCache.metafile)
@@ -80,9 +91,8 @@ export async function setMeta(type, current, previous) {
     meta = await LocalFile.save(fullPath, changes, JSON.stringify)
     return meta
   } catch (error) {
-    throw new LocalHTTPCacheError({
-      title: 'meta',
-      description: 'failed to update metadata',
+    throw new LocalHTTPCacheError('meta', {
+      message: 'failed to update metadata',
       parent: error,
     })
   }

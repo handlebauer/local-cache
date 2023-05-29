@@ -17,7 +17,7 @@ const initialState = ((now = Date.now()) => {
     createdAt: now,
     updatedAt: now,
     files: { count: 0, size: 0 },
-    ops: { reads: 0, writes: 0 },
+    ops: { reads: 0, writes: 0, deletes: 0 },
   }
 })()
 
@@ -31,9 +31,8 @@ export async function createMeta() {
     const returnExisting = { returnExisting: true }
     await LocalFile.save(fullPath, initialState, JSON.stringify, returnExisting)
   } catch (error) {
-    throw new LocalHTTPCacheError({
-      title: 'meta',
-      description: "failed to create cache's meta file",
+    throw new LocalHTTPCacheError('meta', {
+      message: "failed to create cache's meta file",
       parent: error,
     })
   }
